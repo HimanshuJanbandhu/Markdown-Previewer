@@ -1,25 +1,51 @@
-import logo from './logo.svg';
+import {connect} from 'react-redux';
+import Editor from './Components/Editor/Editor';
+import Preview from './Components/Preview/Preview';
 import './App.css';
+import React from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      mode: "normal"
+    }
+  }
+
+  SelectEditor = () => {
+    this.setState({
+      mode: "editor"
+    })  
+  }
+
+  SelectPreview = () => {
+    this.setState({
+      mode: "preview"
+    })  
+  }
+
+  render(){
+    let written = this.props.text;
+    let AppClass = "App " + this.state.mode; 
+    return (
+      <div className = {AppClass}>
+        <div onMouseOver={this.SelectEditor}>
+          <Editor/>
+        </div>
+        <div onMouseOver={this.SelectPreview}>
+          <Preview written = {written}/>
+        </div>
+      </div>
+    );
+  }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    text: state.text
+  };
+}
+
+export default connect(
+  mapStateToProps
+)(App);
